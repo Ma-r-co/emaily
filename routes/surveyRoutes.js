@@ -21,26 +21,26 @@ module.exports = app => {
 
   app.post('/api/surveys/webhooks', (req, res) => {
     const p = new Path('/api/surveys/:surveyId/:choice');
-    req.body.map(({email, url}) => {
-      const match = p.test(new URL(url).pathname);
-      if (match) {
-        return {email, surveyId: match.surveyId, choice: match.choice};
-      }
-    })
-    .filter(Boolean)
-    .filter((x, idx, self) => {return (self.findIndex(value => value.email == x.email && value.surveyId == x.surveyId) === idx)})
-    .forEach(({ surveyId, email, choice }) => {
-      Survey.updateOne({
-        _id: surveyId,
-        recipients: {
-          $elemMatch: { email: email, responded: false }
-        }
-      }, {
-        $inc: { [choice]: 1 },
-        $set: { 'recipients.$.responded': true },
-        lastResponded: new Date()
-      }).exec();
-    });
+    // req.body.map(({email, url}) => {
+    //   const match = p.test(new URL(url).pathname);
+    //   if (match) {
+    //     return {email, surveyId: match.surveyId, choice: match.choice};
+    //   }
+    // })
+    // .filter(Boolean)
+    // .filter((x, idx, self) => {return (self.findIndex(value => value.email == x.email && value.surveyId == x.surveyId) === idx)})
+    // .forEach(({ surveyId, email, choice }) => {
+    //   Survey.updateOne({
+    //     _id: surveyId,
+    //     recipients: {
+    //       $elemMatch: { email: email, responded: false }
+    //     }
+    //   }, {
+    //     $inc: { [choice]: 1 },
+    //     $set: { 'recipients.$.responded': true },
+    //     lastResponded: new Date()
+    //   }).exec();
+    // });
     res.send({});
   });
 
